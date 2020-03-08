@@ -34,7 +34,7 @@ def parallel_compute_mean_std(img_root, num_workers):
  
  if __name__ == "__main__":
     t1=time()
-    mean,std = parallel_compute_mean_std(img_root)
+    mean,std = parallel_compute_mean_std(img_root, 8)
     print(f"cost time:{time()-t1}")
     print(f"MEAN_PIXEL = {mean}")
     print(f"STD_PIXEL = {std}")
