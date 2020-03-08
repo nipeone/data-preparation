@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 #coding=utf-8
 '''
-@File        : mask2coco.py
+@File        : compute_mean.py
 @Date        : 2020/02/21
 @Author      : shine young
 @Contact     : x0601y@126.com
