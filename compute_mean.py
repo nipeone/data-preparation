@@ -20,18 +20,20 @@ def mean_std_per_img(img_path):
     return mean, std
 
 def parallel_compute_mean_std(img_root, num_workers):
-    pool=ThreadPoolExecutor(num_workers)
-
-    if os.path.isdir(img_root):
-        tasks = [pool.submit(mean_std_per_img,(d.path)) for d in os.scandir(img_root)]
-        # dones, not_dones = wait(tasks, return_when=ALL_COMPLETED)
-        #注意设置axis
-        mean, std = np.mean([future.result() for future in tqdm(as_completed(tasks),total=len(tasks))], axis=0)
-        return mean, std
-    elif os.path.isfile(img_root):
-        return mean_std_per_img(img_root)
-    else:
-        return [0., 0., 0.], [0., 0., 0.]
+    with ThreadPoolExecutor(num_workers) as pool:
+        if os.path.isdir(img_root):
+            tasks = [pool.submit(mean_std_per_img,(d.path)) for d in os.scandir(img_root)]
+            # dones, not_dones = wait(tasks, return_when=ALL_COMPLETED)
+            #注意设置axis
+            try:
+                mean, std = np.mean([future.result() for future in tqdm(as_completed(tasks),total=len(tasks))], axis=0)
+            except Exception as e:
+                print(f'{e}')
+            return mean, std
+        elif os.path.isfile(img_root):
+            return mean_std_per_img(img_root)
+        else:
+            return [0., 0., 0.], [0., 0., 0.]
 
 if __name__ == "__main__":
     t1=time()
