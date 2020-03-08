@@ -32,7 +32,7 @@ def parallel_compute_mean_std(img_root, num_workers):
     else:
         return [0., 0., 0.], [0., 0., 0.]
  
- if __name__ == "__main__":
+if __name__ == "__main__":
     t1=time()
     mean,std = parallel_compute_mean_std(img_root, 8)
     print(f"cost time:{time()-t1}")
