@@ -1,5 +1,11 @@
 #coding=utf-8
-
+'''
+@File        : mask2coco.py
+@Date        : 2020/02/21
+@Author      : shine young
+@Contact     : x0601y@126.com
+@License     : Copyright(C), Wukong-Inc.
+'''
 import skimage.io as skio
 import os
 import numpy as np 
