@@ -4,10 +4,11 @@ import skimage.io as skio
 import os
 import numpy as np 
 from time import time
-from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED, as_completed
 
 #图片根目录
-img_root=''
+img_root = ''
 
 def mean_std_per_img(img_path):
     img = skio.imread(img_path)
@@ -23,15 +24,15 @@ def parallel_compute_mean_std(img_root, num_workers):
 
     if os.path.isdir(img_root):
         tasks = [pool.submit(mean_std_per_img,(d.path)) for d in os.scandir(img_root)]
-        dones, not_dones = wait(tasks, return_when=ALL_COMPLETED)
+        # dones, not_dones = wait(tasks, return_when=ALL_COMPLETED)
         #注意设置axis
-        mean, std = np.mean([future.result() for future in dones], axis=0)
+        mean, std = np.mean([future.result() for future in tqdm(as_completed(tasks),total=len(tasks))], axis=0)
         return mean, std
     elif os.path.isfile(img_root):
         return mean_std_per_img(img_root)
     else:
         return [0., 0., 0.], [0., 0., 0.]
- 
+
 if __name__ == "__main__":
     t1=time()
     mean,std = parallel_compute_mean_std(img_root, 8)
